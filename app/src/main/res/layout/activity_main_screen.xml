@@ -1,0 +1,46 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context="free.mtutunik.arlekinsubtitles.MainScreen">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <WebView
+            android:id="@+id/subtitlesView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:foreground="@android:drawable/screen_background_dark_transparent" />
+
+        <EditText
+            android:id="@+id/sourceUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSend"
+            android:inputType="text"
+            android:background="#fBfbfb"
+            android:textColor="#000000"/>
+
+        <ImageButton
+            android:id="@+id/settingsBtn"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_manage"/>
+
+
+
+    </RelativeLayout>
+
+</FrameLayout>
