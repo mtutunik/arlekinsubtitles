@@ -24,6 +24,15 @@
             android:background="@android:color/black"
             android:foreground="@android:drawable/screen_background_dark_transparent" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Channel name"
+            android:id="@+id/channelName"
+            android:textColor="#FFFFFF"
+            android:layout_alignParentTop="true"
+            android:layout_margin="10dp"/>
+
         <EditText
             android:id="@+id/sourceUrl"
             android:layout_width="match_parent"
@@ -31,13 +40,17 @@
             android:imeOptions="actionSend"
             android:inputType="text"
             android:background="#fBfbfb"
-            android:textColor="#000000"/>
+            android:textColor="#000000"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/channelName"
+            android:layout_margin="10dp"/>
 
         <ImageButton
             android:id="@+id/settingsBtn"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_manage"/>
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:src="@android:drawable/ic_menu_edit" />
 
 
 
