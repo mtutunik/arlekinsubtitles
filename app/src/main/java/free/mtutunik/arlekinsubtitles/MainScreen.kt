@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.activity_main_screen.*
 import android.view.inputmethod.InputMethodManager
 import android.preference.PreferenceManager
 import android.os.PowerManager
+import android.view.WindowManager
 import android.webkit.WebViewClient
 
 
@@ -25,6 +26,7 @@ class MainScreen : AppCompatActivity() {
     private lateinit var ctx: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState)
         ctx = this
         val settings = PreferenceManager.getDefaultSharedPreferences(this)
@@ -47,12 +49,15 @@ class MainScreen : AppCompatActivity() {
                     val editor = settings.edit()
                     editor.putString("subtitlesurl", mSubtitlesUrl)
                     editor.commit()
+                    subtitlesView.visibility = View.VISIBLE
                     subtitlesView.loadUrl(SUBTITLES_SERVER_URL + "/" + mSubtitlesUrl)
                 }
+
                 return true
             }
         })
 
+        /*
         sourceUrl.setOnFocusChangeListener(object: View.OnFocusChangeListener {
             override fun onFocusChange(view: View?, isFocus: Boolean) {
                 if (!isFocus) {
@@ -60,17 +65,20 @@ class MainScreen : AppCompatActivity() {
                 }
             }
         })
+        */
 
         sourceUrl.visibility = View.GONE
+        channelName.visibility = sourceUrl.visibility
         settingsBtn.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+                subtitlesView.visibility = View.GONE
                 sourceUrl.visibility = View.VISIBLE
                 channelName.visibility = sourceUrl.visibility
                 sourceUrl.setText(mSubtitlesUrl)
                 settingsBtn.visibility = View.GONE
                 sourceUrl.requestFocus()
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.showSoftInput(sourceUrl, InputMethodManager.SHOW_IMPLICIT)
+                imm.showSoftInput(sourceUrl, InputMethodManager.SHOW_FORCED)
             }
         })
 
@@ -91,7 +99,14 @@ class MainScreen : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        subtitlesView.loadUrl(SUBTITLES_SERVER_URL + "/" + mSubtitlesUrl)
+        if (mSubtitlesUrl != "") {
+
+            subtitlesView.loadUrl(SUBTITLES_SERVER_URL + "/" + mSubtitlesUrl)
+        }
+        else {
+
+            settingsBtn.callOnClick()
+        }
     }
 
 
