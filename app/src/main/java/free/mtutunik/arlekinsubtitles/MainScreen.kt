@@ -11,8 +11,12 @@ import kotlinx.android.synthetic.main.activity_main_screen.*
 import android.view.inputmethod.InputMethodManager
 import android.preference.PreferenceManager
 import android.os.PowerManager
+import android.support.v7.app.AlertDialog
 import android.view.WindowManager
 import android.webkit.WebViewClient
+import android.widget.Toast
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 /**
@@ -24,6 +28,8 @@ class MainScreen : AppCompatActivity() {
     private var mSubtitlesUrl = "";
     private var mWakeLock: PowerManager.WakeLock? = null
     private lateinit var ctx: Context
+    private var mBackBtnWasPressed = false;
+    private var mBackBtnTimer: Timer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -34,6 +40,7 @@ class MainScreen : AppCompatActivity() {
 
         setContentView(R.layout.activity_main_screen)
         subtitlesView.webViewClient = WebViewClient()
+        subtitlesView.getSettings().setJavaScriptEnabled(true);
 
         sourceUrl.setOnEditorActionListener(object: TextView.OnEditorActionListener {
             override fun onEditorAction(editView: TextView?, actionId: Int, evt: KeyEvent?): Boolean {
@@ -89,12 +96,14 @@ class MainScreen : AppCompatActivity() {
         if (!mWakeLock?.isHeld!!) {
             mWakeLock?.acquire()
         }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
         mWakeLock?.release()
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -102,12 +111,35 @@ class MainScreen : AppCompatActivity() {
         if (mSubtitlesUrl != "") {
 
             subtitlesView.loadUrl(SUBTITLES_SERVER_URL + "/" + mSubtitlesUrl)
+
         }
         else {
 
             settingsBtn.callOnClick()
         }
     }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_HOME || keyCode == KeyEvent.KEYCODE_MENU) {
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        if (mBackBtnWasPressed) {
+            super.onBackPressed()
+        }
+        else {
+            mBackBtnWasPressed = true;
+            //Toast.makeText(this, "To exit press Back again", Toast.LENGTH_LONG)
+            mBackBtnTimer = Timer("backButton", false)
+            mBackBtnTimer?.schedule(3000) {
+                mBackBtnWasPressed = false
+            }
+        }
+    }
+
 
 
     companion object {
